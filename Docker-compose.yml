@@ -10,7 +10,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
   server:
-    build:
+    build: ./todo-app
       context: .
       dockerfile: Dockerfile
     env_file: .env
