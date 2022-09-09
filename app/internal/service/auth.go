@@ -39,6 +39,9 @@ func (s *AuthService) CreateUser(ctx context.Context, user model.User) (int, err
 	return s.storage.CreateUser(ctx, user)
 }
 
+func (s *AuthService) GetUser(ctx context.Context, username, password string) (model.User, error) {
+	return s.storage.GetUser(ctx, username, generatePasswordHash(password))
+}
 func (s *AuthService) GenerateToken(ctx context.Context, username, password string) (string, error) {
 	user, err := s.storage.GetUser(ctx, username, generatePasswordHash(password))
 	if err != nil {

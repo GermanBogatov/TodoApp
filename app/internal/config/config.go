@@ -20,6 +20,15 @@ type Config struct {
 		Password string `yaml:"password"`
 		Database string `yaml:"database" env-required:"true"`
 	} `yaml:"postgresqldb" env-required:"true"`
+	JWT struct {
+		Secret string `yaml:"secret"`
+	} `yaml:"jwt" env-required:"true"`
+	Redis struct {
+		Host     string `yaml:"host" env-required:"true"`
+		Port     string `yaml:"port" env-required:"true"`
+		Password string `yaml:"password"`
+		DB       int    `yaml:"db"`
+	}
 }
 
 var instance *Config

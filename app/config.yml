@@ -11,3 +11,11 @@ postgresqldb:
   database: postgres
   username: postgres
   password: qwerty
+jwt:
+  secret: $3cr3t
+redis:
+  host: localhost
+  port: 6379
+  password:
+  db: 0
+

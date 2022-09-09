@@ -8,8 +8,10 @@ import (
 	"github.com/GermanBogatov/TodoApp/app/internal/handler"
 	"github.com/GermanBogatov/TodoApp/app/internal/service"
 	"github.com/GermanBogatov/TodoApp/app/internal/storage"
+	"github.com/GermanBogatov/TodoApp/app/pkg/jwt"
 	"github.com/GermanBogatov/TodoApp/app/pkg/logging"
 	"github.com/GermanBogatov/TodoApp/app/pkg/postgresql"
+	"github.com/GermanBogatov/TodoApp/app/pkg/redis"
 	"github.com/GermanBogatov/TodoApp/app/pkg/shutdown"
 	"net"
 	"net/http"
@@ -29,11 +31,11 @@ func main() {
 	logger.Println("Postgresql config initializing")
 	cfg := config.GetConfig()
 
-	logger.Println("router initializing")
-	//router := gin.New()
+	logger.Println("Redis initializing")
+	RedisClient, err := redis.NewClient(cfg.Redis.Host, cfg.Redis.Port, cfg.Redis.Password, cfg.Redis.DB)
 
-	//metricHandler := metric.Handler{Logger: logger}
-	//metricHandler.Register(router)
+	logger.Println("JWT Helper initializing")
+	NewHelper := jwt.NewHelper(logger, RedisClient)
 
 	logger.Println("Postgresql client initializing")
 	PostgresqlClient, err := postgresql.NewClient(context.Background(), 5, cfg.PostgresqlDB.Username, cfg.PostgresqlDB.Password,
@@ -56,7 +58,7 @@ func main() {
 
 	logger.Println("Handler initializing")
 
-	Handler, err := handler.NewHandler(Service, logger)
+	Handler, err := handler.NewHandler(Service, logger, NewHelper)
 	if err != nil {
 		panic(err)
 	}

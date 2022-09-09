@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/GermanBogatov/TodoApp/app/internal/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -33,10 +34,15 @@ func (h *Handler) signIn(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-
-	token, err := h.Service.Authorization.GenerateToken(c.Request.Context(), input.Username, input.Password)
+	user, err := h.Service.GetUser(c.Request.Context(), input.Username, input.Password)
 	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	fmt.Println("user: ", user)
+	token, err := h.Helper.GenerateAccessToken(user)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, map[string]interface{}{
