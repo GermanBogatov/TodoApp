@@ -1,11 +1,14 @@
 package jwt
 
 import (
+	"context"
+	"encoding/json"
 	"github.com/GermanBogatov/TodoApp/app/internal/config"
 	"github.com/GermanBogatov/TodoApp/app/internal/model"
 	"github.com/GermanBogatov/TodoApp/app/pkg/logging"
 	"github.com/go-redis/redis/v8"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/google/uuid"
 	"strconv"
 	"time"
 )
@@ -17,40 +20,44 @@ type UserClaims struct {
 	Username string `json:"username"`
 }
 
+type RT struct {
+	RefreshToken string `json:"refresh_token"`
+}
+
 type helper struct {
-	Logger logging.Logger
-	client *redis.Client
+	Logger      logging.Logger
+	clientRedis *redis.Client
 }
 
 func NewHelper(logger logging.Logger, client *redis.Client) Helper {
 	return &helper{
-		Logger: logger,
-		client: client,
+		Logger:      logger,
+		clientRedis: client,
 	}
 }
 
 type Helper interface {
-	GenerateAccessToken(u model.User) (string, error)
-	UpdateRefreshToken() (string, error)
+	GenerateAccessToken(u model.User) (string, string, error)
+	UpdateRefreshToken(refreshToken string) (string, string, error)
 }
 
-func (h *helper) UpdateRefreshToken() (string, error) {
-	/*	defer h.RTCache.Del([]byte(rt.RefreshToken))
+func (h *helper) UpdateRefreshToken(refreshToken string) (string, string, error) {
 
-		userBytes, err := h.RTCache.Get([]byte(rt.RefreshToken))
-		if err != nil {
-			return nil, err
-		}
-		var u user_service.User
-		err = json.Unmarshal(userBytes, &u)
-		if err != nil {
-			return nil, err
-		}
-		return h.GenerateAccessToken(u)*/
-	return "", nil
+	defer h.clientRedis.Del(context.Background(), refreshToken)
+
+	userBytes := h.clientRedis.Get(context.Background(), refreshToken)
+
+	var u model.User
+	err := json.Unmarshal([]byte(userBytes.Val()), &u)
+	if err != nil {
+		return "", "", err
+	}
+
+	return h.GenerateAccessToken(u)
+
 }
 
-func (h *helper) GenerateAccessToken(u model.User) (string, error) {
+func (h *helper) GenerateAccessToken(u model.User) (string, string, error) {
 	key := []byte(config.GetConfig().JWT.Secret)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &UserClaims{
@@ -62,5 +69,15 @@ func (h *helper) GenerateAccessToken(u model.User) (string, error) {
 		Username: u.Username,
 	})
 
-	return token.SignedString(key)
+	accessToken, err := token.SignedString(key)
+	if err != nil {
+		return "", "", err
+	}
+
+	h.Logger.Info("create refresh token")
+	refreshTokenUuid := uuid.New()
+	userBytes, _ := json.Marshal(u)
+	h.clientRedis.Set(context.Background(), refreshTokenUuid.String(), userBytes, 0)
+
+	return accessToken, refreshTokenUuid.String(), err
 }

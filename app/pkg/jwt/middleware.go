@@ -36,6 +36,7 @@ func Middleware() gin.HandlerFunc {
 		}
 
 		if !token.Valid {
+			logger.Error("token has been inspired")
 			unauthorized(c.Writer, err)
 			return
 		}
