@@ -23,7 +23,7 @@ func NewLists(client postgresql.ClientPostgres, logger logging.Logger) *reposito
 	}
 }
 
-func (r *repositoryLists) Create(ctx context.Context, userId int, list model.TodoList) (int, error) {
+func (r *repositoryLists) Create(ctx context.Context, userId int, list model.TodoListDTO) (int, error) {
 
 	qLists := `
     INSERT INTO todo_lists 
@@ -65,7 +65,7 @@ func (r *repositoryLists) Create(ctx context.Context, userId int, list model.Tod
 
 }
 
-func (r *repositoryLists) GetAll(ctx context.Context, userId int) ([]model.TodoList, error) {
+func (r *repositoryLists) GetAll(ctx context.Context, userId int) ([]model.TodoListDTO, error) {
 
 	q := `
 		SELECT
@@ -81,10 +81,10 @@ func (r *repositoryLists) GetAll(ctx context.Context, userId int) ([]model.TodoL
 		return nil, err
 	}
 
-	lists := make([]model.TodoList, 0)
+	lists := make([]model.TodoListDTO, 0)
 
 	for rows.Next() {
-		var list model.TodoList
+		var list model.TodoListDTO
 
 		err = rows.Scan(&list.Id, &list.Title, &list.Description)
 		if err != nil {
@@ -101,9 +101,9 @@ func (r *repositoryLists) GetAll(ctx context.Context, userId int) ([]model.TodoL
 
 }
 
-func (r *repositoryLists) GetById(ctx context.Context, userId, listId int) (model.TodoList, error) {
+func (r *repositoryLists) GetById(ctx context.Context, userId, listId int) (model.TodoListDTO, error) {
 
-	var list model.TodoList
+	var list model.TodoListDTO
 	q := `
 			SELECT
 				tl.id, tl.title, tl.description
@@ -118,7 +118,7 @@ func (r *repositoryLists) GetById(ctx context.Context, userId, listId int) (mode
 		`
 	err := r.client.QueryRow(ctx, q, userId, listId).Scan(&list.Id, &list.Title, &list.Description)
 	if err != nil {
-		return model.TodoList{}, err
+		return model.TodoListDTO{}, err
 	}
 	return list, nil
 
@@ -142,7 +142,7 @@ func (r *repositoryLists) Delete(ctx context.Context, userId, listId int) error 
 
 }
 
-func (r *repositoryLists) Update(ctx context.Context, userId, listId int, input model.UpdateListInput) error {
+func (r *repositoryLists) Update(ctx context.Context, userId, listId int, input model.UpdateListInputDTO) error {
 
 	/*q := `
 		UPDATE

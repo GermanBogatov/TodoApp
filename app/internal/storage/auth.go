@@ -21,7 +21,7 @@ func NewAuthorization(client postgresql.ClientPostgres, logger logging.Logger) *
 	}
 }
 
-func (r *repositoryAuth) CreateUser(ctx context.Context, user model.User) (int, error) {
+func (r *repositoryAuth) CreateUser(ctx context.Context, user model.UserDTO) (int, error) {
 
 	q := `
     INSERT INTO users 
@@ -42,8 +42,8 @@ func (r *repositoryAuth) CreateUser(ctx context.Context, user model.User) (int, 
 	return user.Id, nil
 }
 
-func (r *repositoryAuth) GetUser(ctx context.Context, username, password string) (model.User, error) {
-	var user model.User
+func (r *repositoryAuth) GetUser(ctx context.Context, username, password string) (model.UserDTO, error) {
+	var user model.UserDTO
 
 	q := `
 	SELECT id, username
@@ -53,7 +53,7 @@ func (r *repositoryAuth) GetUser(ctx context.Context, username, password string)
 
 	err := r.client.QueryRow(ctx, q, username, password).Scan(&user.Id, &user.Username)
 	if err != nil {
-		return model.User{}, err
+		return model.UserDTO{}, err
 	}
 
 	return user, nil

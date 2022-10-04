@@ -23,7 +23,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 	h.Logger.Println("DECODE MODEL TODOITEM")
-	var input model.TodoItem
+	var input model.TodoItemDTO
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

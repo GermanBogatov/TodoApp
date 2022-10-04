@@ -18,20 +18,25 @@ Content-Type: application/json
   "password": "23Bogatov"
 }
 
+### Refresh
+POST http://localhost:8000/auth/refresh=dd7e03e1-8000-40c6-a722-e1bd064e2b65
+Content-Type: application/json
+
+
 ### create Lists
 POST http://localhost:8000/api/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2Mjc1NDA0NiwianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.R4KPo6Jmf4I82IPNCqsL4n_l4TXkXJ0rXxGNepYPtG0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2NDkwNTY5MSwianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.JuFfdJGY5rNtEiKCqMLSm70rn3UaBfKsv50NZmdAlsk
 
 {
-  "title": "титил три",
+  "title": "test refresh",
   "description": "описание списка 1321"
 }
 
 ### get all Lists
 GET http://localhost:8000/api/lists
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2Mjc0NTY2MCwianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.phRbHxBRNoESP_RDEu_YPApKAJQZVH03eViCfQBkxAQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2NDkwNTA2NywianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.N7Tov8Yzcq1cR3NTG4L0Oy-bV-88tBUnv9V-aSV7kgE
 
 {
 }
@@ -63,9 +68,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsI
 }
 
 ### create item
-POST http://localhost:8000/api/lists/2/items
+POST http://localhost:8000/api/lists/1/items
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2Mjc0NTY2MCwianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.phRbHxBRNoESP_RDEu_YPApKAJQZVH03eViCfQBkxAQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2NDkwNTA2NywianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.N7Tov8Yzcq1cR3NTG4L0Oy-bV-88tBUnv9V-aSV7kgE
 
 {
   "title": "DELETE THIS SHIT",
@@ -73,9 +78,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsI
 }
 
 ### get all items
-GET http://localhost:8000/api/lists/2/items
+GET http://localhost:8000/api/lists/1/items
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2Mjc0NTY2MCwianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.phRbHxBRNoESP_RDEu_YPApKAJQZVH03eViCfQBkxAQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJ1c2VycyIsImV4cCI6MTY2NDkwNTA2NywianRpIjoiMSIsInVzZXJuYW1lIjoiQm9nYXRvdiJ9.N7Tov8Yzcq1cR3NTG4L0Oy-bV-88tBUnv9V-aSV7kgE
 
 {
 }

@@ -2,44 +2,49 @@ package model
 
 import "errors"
 
-type User struct {
+type UserDTO struct {
 	Id       int    `json:"id" db:"id"`
-	Name     string `json:"name" binding:"required"'`
+	Name     string `json:"name" binding:"required"`
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
-type TodoList struct {
+type SignInDTO struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
+type TodoListDTO struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" db:"title" binding:"required"'`
 	Description string `json:"description" db:"description"`
 }
 
-type UserList struct {
+type UserListDTO struct {
 	Id     int
 	UserId int
 	ListId int
 }
 
-type TodoItem struct {
+type TodoItemDTO struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" db:"title" binding:"required"`
 	Description string `json:"description" db:"description"`
 	Done        bool   `json:"done" db:"done"`
 }
 
-type ListsItem struct {
+type ListsItemDTO struct {
 	Id     int
 	ListId int
 	ItemId int
 }
 
-type UpdateListInput struct {
+type UpdateListInputDTO struct {
 	Title       *string `json:"title"`
 	Description *string `json:"description"`
 }
 
-func (i UpdateListInput) Validate() error {
+func (i UpdateListInputDTO) Validate() error {
 	if i.Title == nil && i.Description == nil {
 		return errors.New("update structure has no values")
 	}

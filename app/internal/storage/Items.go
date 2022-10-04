@@ -22,7 +22,7 @@ func NewItems(client postgresql.ClientPostgres, logger logging.Logger) *reposito
 	}
 }
 
-func (r *repositoryItems) Create(ctx context.Context, listId int, item model.TodoItem) (int, error) {
+func (r *repositoryItems) Create(ctx context.Context, listId int, item model.TodoItemDTO) (int, error) {
 	tx, err := r.client.Begin(ctx)
 	if err != nil {
 		return 0, err
@@ -64,7 +64,7 @@ func (r *repositoryItems) Create(ctx context.Context, listId int, item model.Tod
 
 }
 
-func (r *repositoryItems) GetAll(ctx context.Context, userId, listId int) ([]model.TodoItem, error) {
+func (r *repositoryItems) GetAll(ctx context.Context, userId, listId int) ([]model.TodoItemDTO, error) {
 	r.logger.Println("GET ALL ITEMS")
 	q := `
 	SELECT 
@@ -85,10 +85,10 @@ func (r *repositoryItems) GetAll(ctx context.Context, userId, listId int) ([]mod
 	if err != nil {
 		return nil, err
 	}
-	items := make([]model.TodoItem, 0)
+	items := make([]model.TodoItemDTO, 0)
 
 	for rows.Next() {
-		var item model.TodoItem
+		var item model.TodoItemDTO
 
 		err = rows.Scan(&item.Id, &item.Title, &item.Description, &item.Done)
 		if err != nil {
@@ -105,8 +105,8 @@ func (r *repositoryItems) GetAll(ctx context.Context, userId, listId int) ([]mod
 
 }
 
-func (r *repositoryItems) GetById(ctx context.Context, userId, itemId int) (model.TodoItem, error) {
-	var item model.TodoItem
+func (r *repositoryItems) GetById(ctx context.Context, userId, itemId int) (model.TodoItemDTO, error) {
+	var item model.TodoItemDTO
 
 	q := `
 	SELECT
@@ -124,7 +124,7 @@ func (r *repositoryItems) GetById(ctx context.Context, userId, itemId int) (mode
 `
 	err := r.client.QueryRow(ctx, q, itemId, userId).Scan(&item.Id, &item.Title, &item.Description, &item.Done)
 	if err != nil {
-		return model.TodoItem{}, err
+		return model.TodoItemDTO{}, err
 	}
 
 	return item, nil

@@ -14,7 +14,7 @@ func (h *Handler) createList(c *gin.Context) {
 		return
 	}
 
-	var input model.TodoList
+	var input model.TodoListDTO
 	h.Logger.Println("DECODE MODEL TODOLIST")
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -33,7 +33,7 @@ func (h *Handler) createList(c *gin.Context) {
 }
 
 type getAllListsResponse struct {
-	Data []model.TodoList `json:"data"`
+	Data []model.TodoListDTO `json:"data"`
 }
 
 func (h *Handler) getAllList(c *gin.Context) {
@@ -95,7 +95,7 @@ func (h *Handler) updateList(c *gin.Context) {
 	}
 
 	h.Logger.Println("DECODE MODEL")
-	var input model.UpdateListInput
+	var input model.UpdateListInputDTO
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

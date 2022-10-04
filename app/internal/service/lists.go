@@ -19,15 +19,15 @@ func NewTodoListService(storageLists storage.TodoList, logger logging.Logger) *l
 	}
 }
 
-func (s *listService) Create(ctx context.Context, userId int, list model.TodoList) (int, error) {
+func (s *listService) Create(ctx context.Context, userId int, list model.TodoListDTO) (int, error) {
 	return s.storageLists.Create(ctx, userId, list)
 }
 
-func (s *listService) GetAll(ctx context.Context, userId int) ([]model.TodoList, error) {
+func (s *listService) GetAll(ctx context.Context, userId int) ([]model.TodoListDTO, error) {
 	return s.storageLists.GetAll(ctx, userId)
 }
 
-func (s *listService) GetById(ctx context.Context, userId, listId int) (model.TodoList, error) {
+func (s *listService) GetById(ctx context.Context, userId, listId int) (model.TodoListDTO, error) {
 	return s.storageLists.GetById(ctx, userId, listId)
 }
 
@@ -35,7 +35,7 @@ func (s *listService) Delete(ctx context.Context, userId, listId int) error {
 	return s.storageLists.Delete(ctx, userId, listId)
 }
 
-func (s *listService) Update(ctx context.Context, userId, listId int, input model.UpdateListInput) error {
+func (s *listService) Update(ctx context.Context, userId, listId int, input model.UpdateListInputDTO) error {
 	if err := input.Validate(); err != nil {
 		return err
 	}

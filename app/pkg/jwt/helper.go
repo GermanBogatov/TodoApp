@@ -3,6 +3,7 @@ package jwt
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/GermanBogatov/TodoApp/app/internal/config"
 	"github.com/GermanBogatov/TodoApp/app/internal/model"
 	"github.com/GermanBogatov/TodoApp/app/pkg/logging"
@@ -37,7 +38,7 @@ func NewHelper(logger logging.Logger, client *redis.Client) Helper {
 }
 
 type Helper interface {
-	GenerateAccessToken(u model.User) (string, string, error)
+	GenerateAccessToken(u model.UserDTO) (string, string, error)
 	UpdateRefreshToken(refreshToken string) (string, string, error)
 }
 
@@ -46,8 +47,9 @@ func (h *helper) UpdateRefreshToken(refreshToken string) (string, string, error)
 	defer h.clientRedis.Del(context.Background(), refreshToken)
 
 	userBytes := h.clientRedis.Get(context.Background(), refreshToken)
-
-	var u model.User
+	fmt.Println("refresh: ", refreshToken)
+	fmt.Println("userBytes: ", userBytes)
+	var u model.UserDTO
 	err := json.Unmarshal([]byte(userBytes.Val()), &u)
 	if err != nil {
 		return "", "", err
@@ -57,7 +59,7 @@ func (h *helper) UpdateRefreshToken(refreshToken string) (string, string, error)
 
 }
 
-func (h *helper) GenerateAccessToken(u model.User) (string, string, error) {
+func (h *helper) GenerateAccessToken(u model.UserDTO) (string, string, error) {
 	key := []byte(config.GetConfig().JWT.Secret)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &UserClaims{

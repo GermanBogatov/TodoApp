@@ -21,7 +21,7 @@ func NewTodoItemService(storageItems storage.TodoItem, storageLists storage.Todo
 	}
 }
 
-func (s *itemService) Create(ctx context.Context, userId, listId int, item model.TodoItem) (int, error) {
+func (s *itemService) Create(ctx context.Context, userId, listId int, item model.TodoItemDTO) (int, error) {
 	_, err := s.storageLists.GetById(ctx, userId, listId)
 	if err != nil {
 		//list does not exists or does not belongs to user
@@ -31,11 +31,11 @@ func (s *itemService) Create(ctx context.Context, userId, listId int, item model
 	return s.storageItems.Create(ctx, listId, item)
 }
 
-func (s *itemService) GetAll(ctx context.Context, userId, listId int) ([]model.TodoItem, error) {
+func (s *itemService) GetAll(ctx context.Context, userId, listId int) ([]model.TodoItemDTO, error) {
 	return s.storageItems.GetAll(ctx, userId, listId)
 }
 
-func (s *itemService) GetById(ctx context.Context, userId, itemId int) (model.TodoItem, error) {
+func (s *itemService) GetById(ctx context.Context, userId, itemId int) (model.TodoItemDTO, error) {
 	return s.storageItems.GetById(ctx, userId, itemId)
 }
 

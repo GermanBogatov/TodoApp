@@ -34,12 +34,12 @@ func NewAuthService(storage storage.Authorization, logger logging.Logger) *AuthS
 	}
 }
 
-func (s *AuthService) CreateUser(ctx context.Context, user model.User) (int, error) {
+func (s *AuthService) CreateUser(ctx context.Context, user model.UserDTO) (int, error) {
 	user.Password = generatePasswordHash(user.Password)
 	return s.storage.CreateUser(ctx, user)
 }
 
-func (s *AuthService) GetUser(ctx context.Context, username, password string) (model.User, error) {
+func (s *AuthService) GetUser(ctx context.Context, username, password string) (model.UserDTO, error) {
 	return s.storage.GetUser(ctx, username, generatePasswordHash(password))
 }
 func (s *AuthService) GenerateToken(ctx context.Context, username, password string) (string, error) {

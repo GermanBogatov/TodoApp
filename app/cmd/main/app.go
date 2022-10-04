@@ -33,8 +33,9 @@ func main() {
 
 	logger.Println("Redis initializing...")
 	RedisClient, err := redis.NewClient(cfg.Redis.Host, cfg.Redis.Port, cfg.Redis.Password, cfg.Redis.DB)
-
-	fmt.Println(RedisClient.Get(context.Background(), "79395f6d-820c-402f-b453-ce674102d477"))
+	if err != nil {
+		logger.Fatal(err)
+	}
 	logger.Println("JWT Helper initializing...")
 	NewHelper := jwt.NewHelper(logger, RedisClient)
 

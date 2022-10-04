@@ -7,28 +7,31 @@ import (
 )
 
 func (h *Handler) signUp(c *gin.Context) {
-	var input model.User
+	var input model.UserDTO
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+
+	err := validateRequestSign(input)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	id, err := h.Service.Authorization.CreateUser(c.Request.Context(), input)
 	if err != nil {
 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
 }
 
-type signInInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
-
 func (h *Handler) signIn(c *gin.Context) {
-	var input signInInput
+	var input model.SignInDTO
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -46,7 +49,22 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
-	h.Helper.UpdateRefreshToken(refreshToken)
+	//h.helper.UpdateRefreshToken(refreshToken)
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"access_token":  token,
+		"refresh_token": refreshToken,
+	})
+}
+
+func (h *Handler) refresh(c *gin.Context) {
+	refresh := c.Param("refresh_token")
+
+	token, refreshToken, err := h.Helper.UpdateRefreshToken(refresh)
+	if err != nil {
+		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"access_token":  token,
