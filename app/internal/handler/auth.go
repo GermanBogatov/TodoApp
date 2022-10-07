@@ -13,7 +13,7 @@ func (h *Handler) signUp(c *gin.Context) {
 		return
 	}
 
-	err := validateRequestSign(input)
+	err := ValidateRequestSign(input)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

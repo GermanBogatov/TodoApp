@@ -28,7 +28,6 @@ func getUserId(c *gin.Context) (int, error) {
 		newErrorResponse(c, http.StatusInternalServerError, "user id not found")
 		return 0, errors.New("user id not found")
 	}
-	fmt.Println("cgetid :", id)
 	return strconv.Atoi(fmt.Sprintf("%s", id))
 }
 
@@ -37,7 +36,7 @@ func newErrorResponse(c *gin.Context, statusCode int, message string) {
 	c.AbortWithStatusJSON(statusCode, errorResponse{message})
 }
 
-func validateRequestSign(user model.UserDTO) error {
+func ValidateRequestSign(user model.UserDTO) error {
 	fmt.Println("user:", user)
 	if user.Id != 0 {
 		return errors.New("Invalid id in request!")

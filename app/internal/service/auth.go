@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"crypto/sha1"
+	"crypto/sha256"
 	"errors"
 	"fmt"
 	"github.com/GermanBogatov/TodoApp/app/internal/model"
@@ -79,7 +79,7 @@ func (s *AuthService) ParseToken(ctx context.Context, accessToken string) (int, 
 }
 
 func generatePasswordHash(password string) string {
-	hash := sha1.New()
+	hash := sha256.New()
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))

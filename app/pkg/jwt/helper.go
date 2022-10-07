@@ -3,7 +3,6 @@ package jwt
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/GermanBogatov/TodoApp/app/internal/config"
 	"github.com/GermanBogatov/TodoApp/app/internal/model"
 	"github.com/GermanBogatov/TodoApp/app/pkg/logging"
@@ -47,8 +46,7 @@ func (h *helper) UpdateRefreshToken(refreshToken string) (string, string, error)
 	defer h.clientRedis.Del(context.Background(), refreshToken)
 
 	userBytes := h.clientRedis.Get(context.Background(), refreshToken)
-	fmt.Println("refresh: ", refreshToken)
-	fmt.Println("userBytes: ", userBytes)
+
 	var u model.UserDTO
 	err := json.Unmarshal([]byte(userBytes.Val()), &u)
 	if err != nil {

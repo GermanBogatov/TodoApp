@@ -3,17 +3,14 @@ services:
   database:
     image: postgres
     restart: always
-    env_file:
-      - .env
     ports:
       - "5436:5432"
     volumes:
       - data:/var/lib/postgresql/data
   server:
-    build: ./todo-app
+    build: ./app
       context: .
       dockerfile: Dockerfile
-    env_file: .env
     depends_on:
       - database
     networks:
