@@ -15,7 +15,7 @@ const (
 )
 
 type errorResponse struct {
-	Message string `json:"message"'`
+	Message string `json:"message"`
 }
 
 type statusResponse struct {

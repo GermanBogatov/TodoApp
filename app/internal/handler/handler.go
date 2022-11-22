@@ -5,6 +5,10 @@ import (
 	"github.com/GermanBogatov/TodoApp/app/pkg/jwt"
 	"github.com/GermanBogatov/TodoApp/app/pkg/logging"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "github.com/GermanBogatov/TodoApp/app/docs"
 )
 
 type Handler struct {
@@ -24,6 +28,8 @@ func NewHandler(services *service.Service, logger logging.Logger, helper jwt.Hel
 func (h *Handler) InitRoutes() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	auth := router.Group("/auth")
 	{

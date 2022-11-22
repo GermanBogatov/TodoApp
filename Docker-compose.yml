@@ -1,21 +1,32 @@
 version: "3.7"
 services:
-  database:
-    image: postgres
+  PostgresDB:
     restart: always
-    ports:
-      - "5436:5432"
+    image: postgres:latest
     volumes:
-      - data:/var/lib/postgresql/data
+      - ./.database/postgres/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+      - POSTGRES_DB=postgres
+    ports:
+      - 5436:5432
+  redis:
+    image: redislabs/redismod:latest
+    ports:
+      - 6380:6379
+    environment:
+      - REDIS_DB=0
   server:
-    build: ./app
+    build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - database
+      - PostgresDB
+      - redis
     networks:
       - default
     ports:
       - "8000:8000"
-volumes:
-  data:
+    volumes:
+      - .:/usr/local/go/src/TodoApp

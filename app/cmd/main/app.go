@@ -22,14 +22,38 @@ import (
 	"time"
 )
 
-func main() {
+// @title           TodoApp API
+// @version         1.0
+// @description     TodoApp API server.
+// @termsOfService  http://swagger.io/terms/
 
+// @host      localhost:8000
+// @BasePath  /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
+func main() {
+	fmt.Println("test")
+	fmt.Println("---------------------")
+	x := []string{"a", "b", "c"}
+	fmt.Println(x)
+	fmt.Println(len(x), cap(x))
+	fmt.Println("---------------------")
 	logging.Init()
 	logger := logging.GetLogger()
 	logger.Println("logger initialized...")
 
-	logger.Println("Postgresql config initializing...")
+	logger.Println("Config initializing...")
 	cfg := config.GetConfig()
+
+	logger.Println("Postgresql client initializing...")
+	PostgresqlClient, err := postgresql.NewClient(context.Background(), 5, cfg.PostgresqlDB.Username, cfg.PostgresqlDB.Password,
+		cfg.PostgresqlDB.Host, cfg.PostgresqlDB.Port, cfg.PostgresqlDB.Database)
+	if err != nil {
+		logger.Fatal(err)
+	}
 
 	logger.Println("Redis initializing...")
 	RedisClient, err := redis.NewClient(cfg.Redis.Host, cfg.Redis.Port, cfg.Redis.Password, cfg.Redis.DB)
@@ -38,13 +62,6 @@ func main() {
 	}
 	logger.Println("JWT Helper initializing...")
 	NewHelper := jwt.NewHelper(logger, RedisClient)
-
-	logger.Println("Postgresql client initializing...")
-	PostgresqlClient, err := postgresql.NewClient(context.Background(), 5, cfg.PostgresqlDB.Username, cfg.PostgresqlDB.Password,
-		cfg.PostgresqlDB.Host, cfg.PostgresqlDB.Port, cfg.PostgresqlDB.Database)
-	if err != nil {
-		logger.Fatal(err)
-	}
 
 	logger.Println("Storage initializing...")
 	Storage := storage.NewRepository(PostgresqlClient, logger)

@@ -1,16 +1,31 @@
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = ON;
+SET check_function_bodies = FALSE;
+SET client_min_messages = WARNING;
+SET search_path = public, extensions;
+SET default_tablespace = '';
+SET default_with_oids = FALSE;
+
+-- EXTENSIONS --
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- TABLES --
 CREATE TABLE users
 (
     id            serial       not null unique,
-    name          varchar(255) not null,
-    username      varchar(255) not null unique,
-    password_hash varchar(255) not null
+    name          TEXT not null,
+    username      TEXT not null unique,
+    password_hash TEXT not null
 );
 
 CREATE TABLE todo_lists
 (
     id          serial       not null unique,
-    title       varchar(255) not null,
-    description varchar(255)
+    title       TEXT not null,
+    description TEXT
 );
 
 CREATE TABLE users_lists
@@ -23,8 +38,8 @@ CREATE TABLE users_lists
 CREATE TABLE todo_items
 (
     id          serial       not null unique,
-    title       varchar(255) not null,
-    description varchar(255),
+    title       TEXT not null,
+    description TEXT,
     done        boolean      not null default false
 );
 

@@ -41,5 +41,5 @@ func (s *listService) Update(ctx context.Context, userId, listId int, input mode
 	}
 
 	return s.storageLists.Update(ctx, userId, listId, input)
-	return nil
+
 }
